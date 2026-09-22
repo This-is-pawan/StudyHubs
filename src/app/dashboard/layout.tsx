@@ -18,12 +18,12 @@ const DashboardLayout = ({
         React.createElement(
           "h1",
           { className: "text-3xl font-bold sm:text-4xl" },
-          "Settings"
+          "Dashboard"
         ),
         React.createElement(
           "p",
           { className: "mt-2 text-slate-500" },
-          "Manage your StudyHub account and preferences."
+          "See Your StudyHub Dasboard "
         )
       ),
       React.createElement(
