@@ -111,7 +111,7 @@ const Navbar = () => {
             <ul className="mt-2">
               <li>
                 <Link
-                  href="/profile"
+                  href="/dashboard/profile"
                   onClick={closeMenus}
                   className="block rounded-md px-3 py-2 capitalize transition hover:bg-blue-50 hover:text-blue-500"
                 >
@@ -128,7 +128,15 @@ const Navbar = () => {
                   Settings
                 </Link>
               </li>
-
+ <li>
+                <Link
+                  href={`/dashboard`}
+                  onClick={closeMenus}
+                  className="block rounded-md px-3 py-2 capitalize transition hover:bg-blue-50 hover:text-blue-500"
+                >
+                  Dashboard
+                </Link>
+              </li>
               <li className="mt-3 border-t pt-3">
                 <Link
                   href="/"

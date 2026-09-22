@@ -58,7 +58,8 @@ const SettingsSidebar = () => {
                 : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"
             }`,
           },
-          createElement("span", { className: "text-lg" }, createElement(item.icon)),
+          createElement("span", { className: "text-lg" },
+          createElement(item.icon)),
           createElement("span", null, item.name),
         );
       }),
