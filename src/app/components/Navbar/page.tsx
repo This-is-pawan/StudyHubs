@@ -215,7 +215,15 @@ const Navbar = () => {
                     >
                       Settings
                     </Link>
-
+<li>
+                <Link
+                  href={`/dashboard`}
+                  onClick={closeMenus}
+                  className="block rounded-md px-3 py-2 capitalize transition hover:bg-blue-50 hover:text-blue-500"
+                >
+                  Dashboard
+                </Link>
+              </li>
                     <Link
                       href="/"
                       onClick={closeMenus}
