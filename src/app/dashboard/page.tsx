@@ -15,6 +15,8 @@ import {
 import { FaNoteSticky } from "react-icons/fa6";
 
 import image from "../favicon.ico";
+import TimeTableSchedule from "./timeTableSchedule/page";
+import QuickAction from "./quickAction/page";
 
 const Dashboardpage = () => {
   const [arrow, setArrow] = useState(false);
@@ -175,6 +177,17 @@ const Dashboardpage = () => {
           </p>
         </div>
       </div>
+      {/* schedules */}
+      <article className="grid grid-cols-2 gap-2 ">
+      <article className=" text-center mt-3 rounded-lg  border-blue-200 border h-auto">
+     <TimeTableSchedule/>
+      </article>
+      {/* quick actions */}
+      <article className=" text-center mt-3 rounded-lg border-blue-200 border h-auto">
+      <QuickAction/>
+
+      </article>
+      </article>
     </section>
   );
 };

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { createElement } from "react";
 
 import { FaUser, FaBell, FaLock, FaPalette } from "react-icons/fa";
+import { FaPersonArrowUpFromLine } from "react-icons/fa6";
 import { MdOutlineStorage } from "react-icons/md";
 
 const links = [
@@ -32,6 +33,11 @@ const links = [
     name: "Storage",
     href: "/settings/storage",
     icon: MdOutlineStorage,
+  },
+  {
+    name: "Profile",
+    href: "/dashboard/profile",
+    icon: FaPersonArrowUpFromLine,
   },
 ];
 
