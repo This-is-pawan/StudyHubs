@@ -8,7 +8,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-
+  
 type User = {
   id: string;
   name: string;
