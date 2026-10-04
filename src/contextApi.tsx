@@ -1,6 +1,13 @@
+
 "use client";
+
 import axios from "axios";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type User = {
   id: string;
@@ -10,39 +17,47 @@ type User = {
 
 type AuthContextType = {
   authUser: User | null;
-  setAuthUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setAuthUser: React.Dispatch<
+    React.SetStateAction<User | null>
+  >;
   loading: boolean;
-  setLoading: boolean;
+  setLoading: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
   getMe: () => Promise<void>;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<
+  AuthContextType | undefined
+>(undefined);
 
-const ContextApi = ({ children }: { children: React.ReactNode }) => {
-  const [authUser, setAuthUser] = useState<User | null>(null);
+const ContextApi = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [authUser, setAuthUser] =
+    useState<User | null>(null);
+
   const [loading, setLoading] = useState(true);
 
   const getMe = async () => {
     try {
       setLoading(true);
 
-      const response = await axios.get("/api/auth/me", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "/api/auth/me",
+        {
+          withCredentials: true,
+        },
+      );
 
-    
-      if (!response.data) {
-        setAuthUser(null);
-        return;
-      }
-
-      if (response?.data) {
-        setAuthUser(response?.data?.user);
+      if (response.data?.success) {
+        setAuthUser(response.data.user);
       } else {
         setAuthUser(null);
       }
     } catch (error) {
-   
       setAuthUser(null);
     } finally {
       setLoading(false);
@@ -72,7 +87,9 @@ export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used inside ContextApi");
+    throw new Error(
+      "useAuth must be used inside ContextApi",
+    );
   }
 
   return context;
