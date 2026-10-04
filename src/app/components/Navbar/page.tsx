@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -9,16 +10,15 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { IoIosLogOut } from "react-icons/io";
 import { useAuth } from "@/contextApi";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { authUser, loading, setAuthUser } = useAuth();
+  const { authUser, setAuthUser } = useAuth();
+  const router = useRouter();
 
-
-  // later auth se replace kar dena
-  const [userAuth, setUserAuth] = useState(true);
-
-  // Profile dropdown initially closed
   const [openProfile, setOpenProfile] = useState(false);
 
   const handleProfile = () => {
@@ -34,6 +34,36 @@ const Navbar = () => {
   const closeMenus = () => {
     setOpen(false);
     setOpenProfile(false);
+  };
+
+  const Logout = async () => {
+    try {
+      const response = await axios.post(
+        "/api/auth/logout",
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+
+      setAuthUser(null);
+      closeMenus();
+
+      toast.success(
+        response.data.message || "Logout successfully",
+      );
+
+      router.push("/sign-in");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message ||
+            "An error occurred while logging out.",
+        );
+      } else {
+        toast.error("An error occurred while logging out.");
+      }
+    }
   };
 
   return (
@@ -74,7 +104,7 @@ const Navbar = () => {
               className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-blue-500 font-bold uppercase text-white transition hover:bg-blue-600"
               aria-label="Open profile menu"
             >
-              {authUser?.name?.charAt(0)}
+              {authUser.name.charAt(0)}
             </button>
           ) : (
             <Link
@@ -109,7 +139,10 @@ const Navbar = () => {
                 className="h-10 w-10 rounded-full border-2 border-blue-500 p-0.5"
               />
             </div>
-             <p className="text-center text-xs pt-3 tracking-wider ">{authUser?.email}</p>  
+
+            <p className="pt-3 text-center text-xs tracking-wider">
+              {authUser.email}
+            </p>
 
             <ul className="mt-2">
               <li>
@@ -131,24 +164,26 @@ const Navbar = () => {
                   Settings
                 </Link>
               </li>
- <li>
+
+              <li>
                 <Link
-                  href={`/dashboard`}
+                  href="/dashboard"
                   onClick={closeMenus}
                   className="block rounded-md px-3 py-2 capitalize transition hover:bg-blue-50 hover:text-blue-500"
                 >
                   Dashboard
                 </Link>
               </li>
+
               <li className="mt-3 border-t pt-3">
-                <Link
-                  href="/"
-                  onClick={closeMenus}
-                  className="flex items-center justify-center gap-2 rounded-lg border border-blue-200 px-3 py-2 capitalize transition hover:bg-blue-50"
+                <button
+                  type="button"
+                  onClick={Logout}
+                  className="flex items-center justify-center gap-2 rounded-lg border border-blue-200 px-3 py-2 capitalize transition hover:bg-blue-50 m-auto"
                 >
                   <IoIosLogOut className="text-xl" />
                   Sign Out
-                </Link>
+                </button>
               </li>
             </ul>
           </div>
@@ -188,11 +223,13 @@ const Navbar = () => {
                 {/* Mobile Profile */}
                 <button
                   type="button"
-                  onClick={() => setOpenProfile((prev) => !prev)}
+                  onClick={() =>
+                    setOpenProfile((prev) => !prev)
+                  }
                   className="mt-2 flex w-full items-center gap-3 rounded-lg border border-blue-100 p-2 text-left"
                 >
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500 font-bold uppercase text-white">
-                    P
+                    {authUser.name.charAt(0)}
                   </div>
 
                   <span className="font-medium text-black">
@@ -204,7 +241,7 @@ const Navbar = () => {
                 {openProfile && (
                   <div className="ml-3 mt-1 rounded-lg bg-blue-50 p-2">
                     <Link
-                      href="/profile"
+                      href="/dashboard/profile"
                       onClick={closeMenus}
                       className="block rounded-md px-3 py-2 capitalize text-blue-600 hover:bg-white"
                     >
@@ -218,23 +255,23 @@ const Navbar = () => {
                     >
                       Settings
                     </Link>
-<li>
-                <Link
-                  href={`/dashboard`}
-                  onClick={closeMenus}
-                  className="block rounded-md px-3 py-2 capitalize text-blue-600 hover:bg-white"
-                >
-                  Dashboard
-                </Link>
-              </li>
+
                     <Link
-                      href="/"
+                      href="/dashboard"
                       onClick={closeMenus}
-                      className="mt-2 flex items-center gap-2 rounded-md border border-blue-200 bg-white px-3 py-2 capitalize text-blue-600"
+                      className="block rounded-md px-3 py-2 capitalize text-blue-600 hover:bg-white"
+                    >
+                      Dashboard
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={Logout}
+                      className="mt-2 flex w-full items-center gap-2 rounded-md border border-blue-200 bg-white px-3 py-2 capitalize text-blue-600"
                     >
                       <IoIosLogOut />
                       Sign Out
-                    </Link>
+                    </button>
                   </div>
                 )}
               </>

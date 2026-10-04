@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/contextApi";
 import { useEffect, useState } from "react";
 import {
   FaUser,
@@ -31,7 +32,7 @@ const defaultProfile: UserProfile = {
 const ProfilePage = () => {
   const [profile, setProfile] =
     useState<UserProfile>(defaultProfile);
-
+const {authUser}=useAuth()
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -97,7 +98,11 @@ const ProfilePage = () => {
           <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
             <div className="relative mx-auto w-fit">
               <div className="flex h-24 w-24 items-center justify-center rounded-full bg-blue-600 text-2xl font-bold text-white">
-                {initials}
+              {authUser?.name
+  ?.split(" ")
+  .map((word) => word.charAt(0))
+  .join("")
+  .toUpperCase()}
               </div>
 
               <button
@@ -110,11 +115,11 @@ const ProfilePage = () => {
             </div>
 
             <h2 className="mt-4 text-lg font-semibold text-slate-800">
-              {profile.name || "Student"}
+              {authUser?.name || "Student"}
             </h2>
 
             <p className="mt-1 text-sm text-slate-500">
-              {profile.email || "Add your email"}
+              {authUser?.email || "Add your email"}
             </p>
 
             {profile.course && (

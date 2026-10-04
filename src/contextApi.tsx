@@ -12,6 +12,7 @@ type AuthContextType = {
   authUser: User | null;
   setAuthUser: React.Dispatch<React.SetStateAction<User | null>>;
   loading: boolean;
+  setLoading: boolean;
   getMe: () => Promise<void>;
 };
 
@@ -58,6 +59,7 @@ const ContextApi = ({ children }: { children: React.ReactNode }) => {
         authUser,
         setAuthUser,
         loading,
+        setLoading,
         getMe,
       }}
     >
