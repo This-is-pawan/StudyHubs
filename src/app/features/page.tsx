@@ -1,5 +1,5 @@
 import React from "react";
-
+import Link from "next/link";
 import { FaShareSquare } from "react-icons/fa";
 import { FaBusinessTime, FaCloud, FaYoutube } from "react-icons/fa6";
 import { GiProgression } from "react-icons/gi";
@@ -12,6 +12,7 @@ type DataType = {
   heading: string;
   description: string;
   icon: React.ReactNode;
+    link:string;
 };
 
 const data: DataType[] = [
@@ -20,54 +21,63 @@ const data: DataType[] = [
     heading: "Timetable",
     description: "Plan your classes",
     icon: <FaBusinessTime />,
+    link:'/dashboard/timetable'
   },
   {
     id: 2,
     heading: "Tasks",
     description: "Stay productive",
     icon: <GrTasks />,
+    link:'/dashboard/task'
   },
   {
     id: 3,
     heading: "Notes",
     description: "Rich text notes",
     icon: <GrNotes />,
+    link:'/dashboard/notes'
   },
   {
     id: 4,
     heading: "YouTube Save",
     description: "Bookmark videos",
     icon: <FaYoutube />,
+    link:'/dashboard/videos',
   },
   {
     id: 5,
     heading: "Folders",
     description: "Organise content",
     icon: <RiFolderSettingsFill />,
+    link:'/dashboard/folders'
   },
   {
     id: 6,
     heading: "Sharing",
     description: "Share with others",
     icon: <FaShareSquare />,
+    link:'/dashboard/shared'
   },
   {
     id: 7,
     heading: "Search",
     description: "Find anything",
     icon: <MdImageSearch />,
+    link:'/dashboard/search'
   },
   {
     id: 8,
     heading: "Progress",
     description: "Track your growth",
     icon: <GiProgression />,
+    link:'/dashboard/progress'
   },
   {
     id: 9,
     heading: "Cloud Storage",
     description: "Store your files securely",
     icon: <FaCloud />,
+    link:'/settings/storage'
   },
 ];
 
@@ -89,8 +99,10 @@ const Features = () => {
         {/* Features */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {data.map((item) => (
-            <article
+            <Link
               key={item.id}
+              href={item.link}
+           
               className="group rounded-2xl border border-blue-200 bg-white text-black p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/50 hover:bg-white-900 sm:p-6"
             >
               {/* Icon */}
@@ -107,7 +119,7 @@ const Features = () => {
               <p className="mt-2 text-sm leading-6 text-gray-400">
                 {item.description}
               </p>
-            </article>
+            </Link>
           ))}
         </div>
       </div>

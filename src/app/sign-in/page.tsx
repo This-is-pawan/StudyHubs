@@ -5,13 +5,54 @@ import Link from "next/link";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import Logo from "../components/logo/page";
 import { VscLoading } from "react-icons/vsc";
+import { useAuth } from "@/contextApi";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
+    const route=useRouter()
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
- const signInHandle=(e:FormEvent<HTMLFormElement>)=>{
+   const { setAuthUser } = useAuth();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+ const signInHandle=async(e:FormEvent<HTMLFormElement>)=>{
   e.preventDefault()
-  setLoading(true)
+ const data = {
+   
+      email,
+      password,
+    };
+
+    try {
+      setLoading(true);
+
+    const response = await axios.post("/api/auth/sigIn", data, {
+  withCredentials: true,
+});
+
+      if (response.data.success) {
+        setAuthUser(response.data.user);
+        toast.success(
+          response.data.message || "Register successfully",
+        );
+        route.push('/')
+      }
+    } catch (error) {
+      setAuthUser(null);
+
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message ||
+            "An error occurred while signing up.",
+        );
+      } else {
+        toast.error("An error occurred while signing up.");
+      }
+    } finally {
+      setLoading(false);
+    }
  }
   return (
     <main className="min-h-screen bg-amber-50 flex items-center justify-center px-4 py-10 text-black">
@@ -40,6 +81,7 @@ const SignIn = () => {
               name="email"
               placeholder="Enter your email"
               className="border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e)=>setEmail(e.target.value)}
             />
           </div>
 
@@ -55,6 +97,7 @@ const SignIn = () => {
                 name="password"
                 placeholder="Enter your password"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2.5 pr-11 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e)=>setPassword(e.target.value)}
               />
 
               <button

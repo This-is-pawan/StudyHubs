@@ -5,13 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 
 import Logo from "../logo/page";
-
 import { FaBarsStaggered } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { IoIosLogOut } from "react-icons/io";
+import { useAuth } from "@/contextApi";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { authUser, loading, setAuthUser } = useAuth();
+
 
   // later auth se replace kar dena
   const [userAuth, setUserAuth] = useState(true);
@@ -65,14 +67,14 @@ const Navbar = () => {
           </Link>
 
           {/* Authentication */}
-          {userAuth ? (
+          {authUser?.name ? (
             <button
               type="button"
               onClick={handleProfile}
               className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-blue-500 font-bold uppercase text-white transition hover:bg-blue-600"
               aria-label="Open profile menu"
             >
-              P
+              {authUser?.name?.charAt(0)}
             </button>
           ) : (
             <Link
@@ -95,7 +97,7 @@ const Navbar = () => {
         </button>
 
         {/* Desktop Profile Dropdown */}
-        {userAuth && openProfile && (
+        {authUser?.name && openProfile && (
           <div className="absolute right-4 top-16 hidden w-52 rounded-xl border border-blue-100 bg-white p-3 text-blue-600 shadow-xl sm:block">
             {/* Profile Image */}
             <div className="flex justify-center border-b pb-3">
@@ -107,6 +109,7 @@ const Navbar = () => {
                 className="h-10 w-10 rounded-full border-2 border-blue-500 p-0.5"
               />
             </div>
+             <p className="text-center text-xs pt-3 tracking-wider ">{authUser?.email}</p>  
 
             <ul className="mt-2">
               <li>
@@ -180,7 +183,7 @@ const Navbar = () => {
               About
             </Link>
 
-            {userAuth ? (
+            {authUser?.name ? (
               <>
                 {/* Mobile Profile */}
                 <button

@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import { FormEvent, useState } from "react";
@@ -5,14 +7,60 @@ import Link from "next/link";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import Logo from "../components/logo/page";
 import { VscLoading } from "react-icons/vsc";
+import axios from "axios";
+import { useAuth } from "@/contextApi";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
+  const route=useRouter()
   const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
-   const signUpHandle=(e:FormEvent<HTMLFormElement>)=>{
-    e.preventDefault()
-    setLoading(true)
-   }
+  const { setAuthUser } = useAuth();
+
+  const [loading, setLoading] = useState(false);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const signUpHandle = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const data = {
+      name,
+      email,
+      password,
+    };
+
+    try {
+      setLoading(true);
+
+    const response = await axios.post("/api/auth/signUp", data, {
+  withCredentials: true,
+});
+
+      if (response.data.success) {
+        setAuthUser(response.data.user);
+        toast.success(
+          response.data.message || "Register successfully",
+        );
+        route.push('/sign-in')
+      }
+    } catch (error) {
+      setAuthUser(null);
+
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message ||
+            "An error occurred while signing up.",
+        );
+      } else {
+        toast.error("An error occurred while signing up.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-amber-50 flex items-center justify-center px-4 py-10 text-black">
@@ -41,6 +89,7 @@ const SignUp = () => {
               name="name"
               placeholder="Enter your name"
               className="border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
 
@@ -55,6 +104,7 @@ const SignUp = () => {
               name="email"
               placeholder="Enter your email"
               className="border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -70,15 +120,14 @@ const SignUp = () => {
                 name="password"
                 placeholder="Enter your password"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2.5 pr-11 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black"
-                aria-label={
-                  showPassword ? "Hide password" : "Show password"
-                }
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
                   <IoEye size={22} />
@@ -91,11 +140,14 @@ const SignUp = () => {
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-2.5 rounded-lg font-medium mt-2 cursor-pointer flex justify-center items-center"
           >
-           
-                      {loading?<VscLoading  className="animate-spin transition-all text-center text-2xl"/>:' Sign Up'}
-           
+            {loading ? (
+              <VscLoading className="animate-spin transition-all text-center text-2xl" />
+            ) : (
+              "Sign Up"
+            )}
           </button>
 
           <p className="text-center text-sm text-gray-600">
